@@ -5,5 +5,5 @@
 }
 
 .listItem {
-  flex-basis: calc((100% - 4 * 16px) / 5);
+  width: 200px;
 }
