@@ -8,14 +8,14 @@ const schema = yup.object().shape({
   number: yup.string().min(3, 'Too short').max(50, 'Too long').required('Required'),
 });
 
-const ContactForm = ({ handleSubmit }) => {
+const ContactForm = ({ onAdd }) => {
   const elementId = useId();
 
   return (
     <div className={c.container}>
       <Formik
         initialValues={{ id: '', name: '', number: '' }}
-        onSubmit={handleSubmit}
+        onSubmit={onAdd}
         validationSchema={schema}
       >
         <Form className={c.form}>

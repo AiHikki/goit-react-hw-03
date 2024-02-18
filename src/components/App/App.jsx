@@ -6,19 +6,18 @@ import ContactList from '../ContactList/ContactList';
 import './App.css';
 
 const App = () => {
-  const savedContacts = JSON.parse(localStorage.getItem('saved-contacts')) ?? [];
-  const [contacts, setContacts] = useState(savedContacts);
-  const [filteredContacts, setFilteredContacts] = useState(savedContacts);
+  const [contacts, setContacts] = useState(
+    () => JSON.parse(localStorage.getItem('saved-contacts')) ?? []
+  );
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     localStorage.setItem('saved-contacts', JSON.stringify(contacts));
   }, [contacts]);
 
-  useEffect(() => {
-    const filtered = contacts.filter(contact => contact.name.toLowerCase().includes(searchQuery));
-    setFilteredContacts(filtered);
-  }, [contacts, searchQuery]);
+  const filteredContact = contacts.filter(contact =>
+    contact.name.toLowerCase().includes(searchQuery)
+  );
 
   const handleSearchQueryChange = e => {
     setSearchQuery(e.target.value.toLowerCase().trim());
@@ -26,7 +25,7 @@ const App = () => {
 
   const handleAddContact = (newContact, { resetForm }) => {
     setContacts(prevContacts => [...prevContacts, { ...newContact, id: nanoid() }]);
-    resetForm();
+    resetForm && resetForm();
   };
 
   const handleDeleteContact = contactId => {
@@ -36,9 +35,9 @@ const App = () => {
   return (
     <div>
       <h1>Phonebook</h1>
-      <ContactForm handleSubmit={handleAddContact} />
+      <ContactForm onAdd={handleAddContact} />
       <SearchBox value={searchQuery} handleChange={handleSearchQueryChange} />
-      <ContactList contacts={filteredContacts} deleteContact={handleDeleteContact} />
+      <ContactList contacts={filteredContact} deleteContact={handleDeleteContact} />
     </div>
   );
 };
